@@ -2,55 +2,56 @@ name: Build Multi-Platform Binaries
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: [ '**' ]
   workflow_dispatch:
 
 jobs:
   build:
+    name: Build ${{ matrix.artifact }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         include:
-          - os: ubuntu-latest
+          - name: Linux x86_64
+            os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
-            artifact: accessify-rs-linux-x86_64
-          - os: ubuntu-latest
+            artifact: accessify-linux-x86_64
+          - name: Linux ARM64
+            os: ubuntu-latest
             target: aarch64-unknown-linux-gnu
-            artifact: accessify-rs-linux-arm64
-          - os: windows-latest
+            artifact: accessify-linux-arm64
+          - name: Windows x86_64
+            os: windows-latest
             target: x86_64-pc-windows-msvc
-            artifact: accessify-rs-windows-x86_64.exe
-          - os: macos-latest
+            artifact: accessify-windows-x86_64.exe
+          - name: macOS x86_64
+            os: macos-latest
             target: x86_64-apple-darwin
-            artifact: accessify-rs-macos-x86_64
-          - os: macos-latest
+            artifact: accessify-macos-x86_64
+          - name: macOS ARM64
+            os: macos-latest
             target: aarch64-apple-darwin
-            artifact: accessify-rs-macos-arm64
+            artifact: accessify-macos-arm64
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Rust
+      - name: Install Rust (${{ matrix.name }})
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           target: ${{ matrix.target }}
           override: true
 
-      - name: Install build dependencies (Linux ARM only)
-        if: matrix.target == 'aarch64-unknown-linux-gnu'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc-aarch64-linux-gnu
+      - name: Install cross (${{ matrix.name }})
+        run: cargo install cross
 
-      - name: Build release
-        run: cargo build --release --target ${{ matrix.target }}
+      - name: Build release (${{ matrix.name }})
+        run: cross build --release --target ${{ matrix.target }}
 
-      - name: Upload artifact
+      - name: Upload artifact (${{ matrix.name }})
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
           path: |
-            target/${{ matrix.target }}/release/accessify-rs*
+            target/${{ matrix.target }}/release/accessify
