@@ -41,15 +41,20 @@ pub async fn extract_token() -> Result<String, String> {
     use tokio::time::{sleep, timeout};
 
     // Launch browser in headless mode with minimal args
+    let chrome_path = std::env::var("CHROME_PATH").ok();
+    let mut config_builder = chromiumoxide::BrowserConfig::builder()
+        .args(vec![
+            "--headless=new",
+            "--no-sandbox",
+            "--disable-web-security",
+            "--disable-dev-shm-usage",
+            "--mute-audio",
+        ]);
+    if let Some(path) = chrome_path {
+        config_builder = config_builder.chrome_executable(path);
+    }
     let (mut browser, mut handler) = Browser::launch(
-        chromiumoxide::BrowserConfig::builder()
-            .args(vec![
-                "--headless=new",
-                "--no-sandbox",
-                "--disable-web-security",
-                "--disable-dev-shm-usage",
-                "--mute-audio",
-            ])
+        config_builder
             .build()
             .map_err(|e| format!("Browser config error: {e}"))?,
     )

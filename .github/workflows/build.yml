@@ -36,12 +36,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Rust (${{ matrix.name }})
-        uses: actions-rs/toolchain@v1
+      - name: Set up Rust (${{ matrix.name }})
+        uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: stable
-          target: ${{ matrix.target }}
-          override: true
+          targets: ${{ matrix.target }}
 
       - name: Install cross (${{ matrix.name }})
         run: cargo install cross
@@ -54,4 +52,4 @@ jobs:
         with:
           name: ${{ matrix.artifact }}
           path: |
-            target/${{ matrix.target }}/release/accessify
+            ${{ (matrix.os == 'windows-latest' && format('target/{0}/release/accessify.exe', matrix.target)) || format('target/{0}/release/accessify', matrix.target) }}
