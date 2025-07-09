@@ -1,12 +1,8 @@
-# ⚠️ WARNING: This project is in testing phase! ⚠️
-
-> This Rust version of Accessify is under development and testing. Features, APIs, and stability may change at any time. Use at your own risk!
-
 # Accessify (Rust versions)
 
 > **Credit:** This project is based on [devoxin/anonify](https://github.com/devoxin/anonify) with refactoring and adaptation for LavaSrc and general Spotify access token needs.
 
-A simple REST API to generate and cache anonymous Spotify access tokens using browser automation (chromiumoxide). Designed for use as a custom anonymous token endpoint for [LavaSrc](https://github.com/topi314/LavaSrc) on Lavalink, but can be used by any service needing a fresh Spotify access token.
+A simple REST API to generate and cache anonymous Spotify access tokens using [chromiumoxide](https://github.com/mattsse/chromiumoxide). This project is primarily designed for use as a custom anonymous token endpoint for [LavaSrc](https://github.com/topi314/LavaSrc) on Lavalink, but can be used in any application or service that needs a fresh Spotify access token.
 
 ## Features
 
@@ -34,16 +30,13 @@ A simple REST API to generate and cache anonymous Spotify access tokens using br
 - **macOS:**  
   Install Chrome or Chromium.
 
-## Build & Run
-
-### Local (default target)
+## Build
 
 ```bash
 cargo build --release
-./target/release/accessify-rs
 ```
 
-### Cross-compile (Linux, ARM, Windows, macOS)
+### Cross-compile
 
 - **Via [cross](https://github.com/cross-rs/cross) (recommended, needs Docker):**
   ```bash
@@ -54,8 +47,18 @@ cargo build --release
   cross build --release --target aarch64-apple-darwin          # macOS ARM64
   ```
 
-- **Via GitHub Actions:**  
-  Project includes a workflow to build for all major platforms and upload artifacts automatically.
+### Build Output
+
+- **Linux:** `target/release/accessify-rs`
+- **Windows:** `target\release\accessify-rs.exe`
+
+### Run
+
+- **Linux/macOS:**  
+  `./target/release/accessify-rs`
+- **Windows:**  
+  `.\\target\\release\\accessify-rs.exe`
+.\target\release\accessify-rs.exe
 
 ## API Usage
 
@@ -69,7 +72,7 @@ curl http://localhost:3000/spotifytoken
 
 ## Integration: LavaSrc Custom Anonymous Token Endpoint
 
-This API can be used as a custom anonymous token endpoint for [LavaSrc](https://github.com/topi314/LavaSrc) and Lavalink.
+This API can be used as a custom anonymous token endpoint for [LavaSrc](https://github.com/topi314/LavaSrc) and Lavalink (see [LavaSrc PR #286](https://github.com/topi314/LavaSrc/pull/286)).
 
 **Example LavaSrc on Lavalink config:**
 ```yaml
@@ -82,7 +85,6 @@ spotify:
 
 - For deployment on server/CI, make sure Chromium/Chrome is available and accessible.
 - If `CHROME_PATH` is not set, the system will try to use the default browser in PATH.
-- Request logs include user-agent and timestamp.
-- For ARM or other platforms, see the build matrix in `.github/workflows/build-matrix.yml`.
+- Request logs include IP and user-agent.
 
 ---
