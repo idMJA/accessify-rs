@@ -1,10 +1,15 @@
-use crate::handler::spotify::SpotifyTokenHandler;
-use crate::utils::logger::logs;
-use axum::{extract::{ConnectInfo, State}, http::StatusCode, response::IntoResponse};
+use axum::{
+    extract::{ConnectInfo, State},
+    http::StatusCode,
+    response::IntoResponse,
+};
 use axum_extra::extract::TypedHeader;
 use headers::UserAgent;
 use std::net::SocketAddr;
 use std::sync::Arc;
+
+use crate::handler::spotify::SpotifyTokenHandler;
+use crate::utils::logger::logs;
 
 pub async fn handle_token(
     ConnectInfo(addr): ConnectInfo<SocketAddr>,
@@ -44,14 +49,13 @@ pub async fn extract_token() -> Result<String, String> {
 
     // Launch browser in headless mode with minimal args
     let chrome_path = std::env::var("CHROME_PATH").ok();
-    let mut config_builder = chromiumoxide::BrowserConfig::builder()
-        .args(vec![
-            "--headless=new",
-            "--no-sandbox",
-            "--disable-web-security",
-            "--disable-dev-shm-usage",
-            "--mute-audio",
-        ]);
+    let mut config_builder = chromiumoxide::BrowserConfig::builder().args(vec![
+        "--headless=new",
+        "--no-sandbox",
+        "--disable-web-security",
+        "--disable-dev-shm-usage",
+        "--mute-audio",
+    ]);
     if let Some(path) = chrome_path {
         config_builder = config_builder.chrome_executable(path);
     }

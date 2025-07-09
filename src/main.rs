@@ -2,9 +2,11 @@ use axum::{Router, routing::get};
 use std::net::SocketAddr;
 use std::sync::Arc;
 use tokio::signal;
+
 mod handler;
 mod types;
 mod utils;
+
 use handler::spotify::SpotifyTokenHandler;
 use utils::logger::logs;
 
@@ -20,10 +22,7 @@ async fn main() {
     token_handler.init(|| handler::token::extract_token()).await;
     let app = Router::new().route(
         "/spotifytoken",
-        get(
-            handler::token::handle_token
-        )
-        .with_state(token_handler.clone()),
+        get(handler::token::handle_token).with_state(token_handler.clone()),
     );
     let listener = tokio::net::TcpListener::bind(addr)
         .await
