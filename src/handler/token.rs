@@ -1,16 +1,18 @@
 use crate::handler::spotify::SpotifyTokenHandler;
 use crate::utils::logger::logs;
-use axum::{http::StatusCode, response::IntoResponse};
+use axum::{extract::{ConnectInfo, State}, http::StatusCode, response::IntoResponse};
 use axum_extra::extract::TypedHeader;
 use headers::UserAgent;
+use std::net::SocketAddr;
 use std::sync::Arc;
 
 pub async fn handle_token(
+    ConnectInfo(addr): ConnectInfo<SocketAddr>,
     TypedHeader(user_agent): TypedHeader<UserAgent>,
-    token_handler: Arc<SpotifyTokenHandler>,
+    State(token_handler): State<Arc<SpotifyTokenHandler>>,
 ) -> impl IntoResponse {
     let start = std::time::Instant::now();
-    let ip = "unknown"; // i gave up
+    let ip = addr.ip();
     let ua = user_agent.as_str();
     let result = token_handler
         .get_access_token(|| crate::handler::token::extract_token())
