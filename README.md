@@ -1,8 +1,10 @@
-# Accessify (Rust versions)
+# Accessify (Rust version)
 
-> **Credit:** This project is based on [devoxin/anonify](https://github.com/devoxin/anonify) with refactoring and adaptation for LavaSrc and general Spotify access token needs.
+> **Original:** This project is a Rust port of [accessify](https://github.com/idMJA/accessify).
 
 A simple REST API to generate and cache anonymous Spotify access tokens using [chromiumoxide](https://github.com/mattsse/chromiumoxide). This project is primarily designed for use as a custom anonymous token endpoint for [LavaSrc](https://github.com/topi314/LavaSrc) on Lavalink, but can be used in any application or service that needs a fresh Spotify access token.
+
+**For the simplest and quickest deployment, or if you are using Pterodactyl, I suggest using the [TypeScript version](https://github.com/idMJA/accessify).**
 
 ## Features
 
